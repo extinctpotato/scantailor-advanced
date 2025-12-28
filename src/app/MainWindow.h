@@ -298,6 +298,8 @@ class MainWindow : public QMainWindow, private FilterUiInterface, private Ui::Ma
 
   void setupIcons();
 
+  void updateStatusBarFileName(PageInfo pageInfo);
+
   QSizeF m_maxLogicalThumbSize;
   std::shared_ptr<ProjectPages> m_pages;
   std::shared_ptr<StageSequence> m_stages;

@@ -35,6 +35,10 @@ class StatusBarPanel : public QWidget, public UnitsListener, public ImageViewInf
 
   void updatePage(int pageNumber, size_t pageCount, const PageId& pageId);
 
+  void updateFileName(const PageId& pageId);
+
+  void clearFileName();
+
   void clear();
 
   void onUnitsChanged(Units) override;

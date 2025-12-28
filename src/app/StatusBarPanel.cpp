@@ -9,6 +9,7 @@
 #include <cmath>
 
 #include "ImageViewInfoProvider.h"
+#include "OutputFileNameGenerator.h"
 #include "PageId.h"
 #include "UnitsProvider.h"
 
@@ -53,6 +54,14 @@ void StatusBarPanel::updatePage(int pageNumber, size_t pageCount, const PageId& 
   ui.pageInfoLabel->setVisible(true);
 }
 
+void StatusBarPanel::updateFileName(const PageId& pageId) {
+  const OutputFileNameGenerator outFileNameGen;
+  const QString outFileName = outFileNameGen.fileNameFor(pageId);
+  ui.fileNameLine->setVisible(true);
+  ui.fileNameLabel->setText(outFileName);
+  ui.fileNameLabel->setVisible(true);
+}
+
 namespace {
 inline void clearAndHideLabel(QLabel* widget) {
   widget->clear();
@@ -66,11 +75,18 @@ void StatusBarPanel::clear() {
   clearAndHideLabel(ui.pageNoLabel);
   clearAndHideLabel(ui.pageInfoLabel);
   clearAndHideLabel(ui.zoneModeLabel);
+  clearAndHideLabel(ui.fileNameLabel);
 
   ui.mousePosLine->setVisible(false);
   ui.physSizeLine->setVisible(false);
   ui.pageInfoLine->setVisible(false);
   ui.zoneModeLine->setVisible(false);
+  ui.fileNameLine->setVisible(false);
+}
+
+void StatusBarPanel::clearFileName() {
+  clearAndHideLabel(ui.fileNameLabel);
+  ui.fileNameLine->setVisible(false);
 }
 
 void StatusBarPanel::onUnitsChanged(Units) {

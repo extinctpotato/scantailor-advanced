@@ -147,6 +147,7 @@ MainWindow::MainWindow()
     PageSequence pageSequence = m_thumbSequence->toPageSequence();
     if (pageSequence.numPages() > 0) {
       m_statusBarPanel->updatePage(pageSequence.pageNo(pageInfo.id()) + 1, pageSequence.numPages(), pageInfo.id());
+      updateStatusBarFileName(pageInfo);
     } else {
       m_statusBarPanel->clear();
     }
@@ -2119,4 +2120,12 @@ void MainWindow::reloadCurrentPage() {
     return;
 
   updateMainArea();
+}
+
+void MainWindow::updateStatusBarFileName(PageInfo pageInfo) {
+  if (isOutputFilter() && checkReadyForOutput(&pageInfo.id())) {
+    m_statusBarPanel->updateFileName(pageInfo.id());
+  } else {
+    m_statusBarPanel->clearFileName();
+  }
 }
