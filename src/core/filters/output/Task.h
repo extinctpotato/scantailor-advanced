@@ -41,6 +41,7 @@ class Task {
        std::shared_ptr<ThumbnailPixmapCache> thumbnailCache,
        const PageId& pageId,
        const OutputFileNameGenerator& outFileNameGen,
+       const PageSequence& sequence,
        ImageViewTab lastTab,
        bool batch,
        bool debug);
@@ -60,6 +61,7 @@ class Task {
   std::unique_ptr<DebugImages> m_dbg;
   PageId m_pageId;
   OutputFileNameGenerator m_outFileNameGen;
+  PageSequence m_pageSequence;
   ImageViewTab m_lastTab;
   bool m_batchProcessing;
   bool m_debug;

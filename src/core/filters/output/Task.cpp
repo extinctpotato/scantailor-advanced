@@ -91,6 +91,7 @@ Task::Task(std::shared_ptr<Filter> filter,
            std::shared_ptr<ThumbnailPixmapCache> thumbnailCache,
            const PageId& pageId,
            const OutputFileNameGenerator& outFileNameGen,
+	   const PageSequence& sequence,
            const ImageViewTab lastTab,
            const bool batch,
            const bool debug)
@@ -99,6 +100,7 @@ Task::Task(std::shared_ptr<Filter> filter,
       m_thumbnailCache(std::move(thumbnailCache)),
       m_pageId(pageId),
       m_outFileNameGen(outFileNameGen),
+      m_pageSequence(sequence),
       m_lastTab(lastTab),
       m_batchProcessing(batch),
       m_debug(debug) {
@@ -120,7 +122,7 @@ FilterResultPtr Task::process(const TaskStatus& status, const FilterData& data, 
   newXform.postScaleToDpi(params.outputDpi());
 
   const QFileInfo sourceFileInfo(m_pageId.imageId().filePath());
-  const QString outFilePath(m_outFileNameGen.filePathFor(m_pageId));
+  const QString outFilePath(m_outFileNameGen.filePathFor(m_pageId, m_pageSequence));
   const QFileInfo outFileInfo(outFilePath);
   const QString foregroundDir(Utils::foregroundDir(m_outFileNameGen.outDir()));
   const QString backgroundDir(Utils::backgroundDir(m_outFileNameGen.outDir()));
@@ -445,12 +447,12 @@ FilterResultPtr Task::process(const TaskStatus& status, const FilterData& data, 
 void Task::deleteMutuallyExclusiveOutputFiles() {
   switch (m_pageId.subPage()) {
     case PageId::SINGLE_PAGE:
-      QFile::remove(m_outFileNameGen.filePathFor(PageId(m_pageId.imageId(), PageId::LEFT_PAGE)));
-      QFile::remove(m_outFileNameGen.filePathFor(PageId(m_pageId.imageId(), PageId::RIGHT_PAGE)));
+      QFile::remove(m_outFileNameGen.filePathFor(PageId(m_pageId.imageId(), PageId::LEFT_PAGE), m_pageSequence));
+      QFile::remove(m_outFileNameGen.filePathFor(PageId(m_pageId.imageId(), PageId::RIGHT_PAGE), m_pageSequence));
       break;
     case PageId::LEFT_PAGE:
     case PageId::RIGHT_PAGE:
-      QFile::remove(m_outFileNameGen.filePathFor(PageId(m_pageId.imageId(), PageId::SINGLE_PAGE)));
+      QFile::remove(m_outFileNameGen.filePathFor(PageId(m_pageId.imageId(), PageId::SINGLE_PAGE), m_pageSequence));
       break;
   }
 }

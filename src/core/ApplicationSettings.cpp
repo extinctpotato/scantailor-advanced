@@ -29,6 +29,7 @@ const QString ApplicationSettings::DEFAULT_LANGUAGE = QLocale::system().name();
 const QString ApplicationSettings::DEFAULT_UNITS = "mm";
 const QString ApplicationSettings::DEFAULT_PROFILE = "Default";
 const bool ApplicationSettings::DEFAULT_SHOW_CANCELING_SELECTION_QUESTION = true;
+const bool ApplicationSettings::DEFAULT_RENAME_SEQUENTIALLY = false;
 
 const QString ApplicationSettings::ROOT_KEY = "settings";
 const QString ApplicationSettings::OPENGL_STATE_KEY = "enable_opengl";
@@ -52,6 +53,7 @@ const QString ApplicationSettings::LANGUAGE_KEY = "language";
 const QString ApplicationSettings::UNITS_KEY = "units";
 const QString ApplicationSettings::CURRENT_PROFILE_KEY = "current_profile";
 const QString ApplicationSettings::SHOW_CANCELING_SELECTION_QUESTION_KEY = "selection_canceling_question";
+const QString ApplicationSettings::RENAME_SEQUENTIALLY_KEY = "rename_sequentially";
 
 QString ApplicationSettings::getKey(const QString& keyName) {
   return ApplicationSettings::ROOT_KEY + '/' + keyName;
@@ -234,4 +236,13 @@ bool ApplicationSettings::isCancelingSelectionQuestionEnabled() {
 
 void ApplicationSettings::setCancelingSelectionQuestionEnabled(bool enabled) {
   m_settings.setValue(getKey(SHOW_CANCELING_SELECTION_QUESTION_KEY), enabled);
+}
+
+bool ApplicationSettings::isRenameSequentiallyEnabled() {
+  return m_settings.value(getKey(RENAME_SEQUENTIALLY_KEY), DEFAULT_RENAME_SEQUENTIALLY)
+      .toBool();
+}
+
+void ApplicationSettings::setRenameSequentiallyEnabled(bool enabled) {
+  m_settings.setValue(getKey(RENAME_SEQUENTIALLY_KEY), enabled);
 }

@@ -21,7 +21,7 @@ class CacheDrivenTask {
   DECLARE_NON_COPYABLE(CacheDrivenTask)
 
  public:
-  CacheDrivenTask(std::shared_ptr<Settings> settings, const OutputFileNameGenerator& outFileNameGen);
+  CacheDrivenTask(std::shared_ptr<Settings> settings, const OutputFileNameGenerator& outFileNameGen, const PageSequence& sequence);
 
   virtual ~CacheDrivenTask();
 
@@ -33,6 +33,7 @@ class CacheDrivenTask {
  private:
   std::shared_ptr<Settings> m_settings;
   OutputFileNameGenerator m_outFileNameGen;
+  PageSequence m_pageSequence;
 };
 }  // namespace output
 #endif  // ifndef SCANTAILOR_OUTPUT_CACHEDRIVENTASK_H_

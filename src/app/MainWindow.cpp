@@ -1412,6 +1412,7 @@ void MainWindow::openSettingsDialog() {
   dialog->setAttribute(Qt::WA_DeleteOnClose);
   dialog->setWindowModality(Qt::WindowModal);
   connect(dialog, SIGNAL(settingsChanged()), this, SLOT(onSettingsChanged()));
+  connect(dialog, SIGNAL(fileNamingChanged()), this, SLOT(onFileNamingChanged()));
   dialog->show();
 }
 
@@ -1447,6 +1448,10 @@ void MainWindow::onSettingsChanged() {
   if (needInvalidate) {
     m_thumbSequence->invalidateAllThumbnails();
   }
+}
+
+void MainWindow::onFileNamingChanged() {
+  updateStatusBarFileName(m_thumbSequence->selectionLeader());
 }
 
 void MainWindow::showAboutDialog() {
@@ -1930,7 +1935,7 @@ void MainWindow::eraseOutputFiles(const std::set<PageId>& pages) {
     }
 
     for (PageId::SubPage subpage : eraseVariations) {
-      QFile::remove(m_outFileNameGen.filePathFor(PageId(pageId.imageId(), subpage)));
+      QFile::remove(m_outFileNameGen.filePathFor(PageId(pageId.imageId(), subpage), m_thumbSequence->toPageSequence()));
     }
   }
 }
@@ -1951,7 +1956,7 @@ BackgroundTaskPtr MainWindow::createCompositeTask(const PageInfo& page,
   }
 
   if (lastFilterIdx >= m_stages->outputFilterIdx()) {
-    outputTask = m_stages->outputFilter()->createTask(page.id(), m_thumbnailCache, m_outFileNameGen, batch, debug);
+    outputTask = m_stages->outputFilter()->createTask(page.id(), m_thumbnailCache, m_outFileNameGen, m_pages->toPageSequence(getCurrentView()), batch, debug);
     debug = false;
   }
   if (lastFilterIdx >= m_stages->pageLayoutFilterIdx()) {
@@ -1988,7 +1993,7 @@ std::shared_ptr<CompositeCacheDrivenTask> MainWindow::createCompositeCacheDriven
   std::shared_ptr<output::CacheDrivenTask> outputTask;
 
   if (lastFilterIdx >= m_stages->outputFilterIdx()) {
-    outputTask = m_stages->outputFilter()->createCacheDrivenTask(m_outFileNameGen);
+    outputTask = m_stages->outputFilter()->createCacheDrivenTask(m_outFileNameGen, m_pages->toPageSequence(getCurrentView()));
   }
   if (lastFilterIdx >= m_stages->pageLayoutFilterIdx()) {
     pageLayoutTask = m_stages->pageLayoutFilter()->createCacheDrivenTask(outputTask);
@@ -2124,7 +2129,7 @@ void MainWindow::reloadCurrentPage() {
 
 void MainWindow::updateStatusBarFileName(PageInfo pageInfo) {
   if (isOutputFilter() && checkReadyForOutput(&pageInfo.id())) {
-    m_statusBarPanel->updateFileName(pageInfo.id());
+    m_statusBarPanel->updateFileName(pageInfo.id(), m_thumbSequence->toPageSequence());
   } else {
     m_statusBarPanel->clearFileName();
   }

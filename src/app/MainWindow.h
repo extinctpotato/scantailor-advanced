@@ -180,6 +180,8 @@ class MainWindow : public QMainWindow, private FilterUiInterface, private Ui::Ma
 
   void onSettingsChanged();
 
+  void onFileNamingChanged();
+
   void showAboutDialog();
 
   void handleOutOfMemorySituation();

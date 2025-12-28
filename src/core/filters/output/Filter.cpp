@@ -134,6 +134,7 @@ void Filter::loadSettings(const ProjectReader& reader, const QDomElement& filter
 std::shared_ptr<Task> Filter::createTask(const PageId& pageId,
                                          std::shared_ptr<ThumbnailPixmapCache> thumbnailCache,
                                          const OutputFileNameGenerator& outFileNameGen,
+					 const PageSequence& sequence,
                                          const bool batch,
                                          const bool debug) {
   ImageViewTab lastTab(TAB_OUTPUT);
@@ -141,11 +142,11 @@ std::shared_ptr<Task> Filter::createTask(const PageId& pageId,
     lastTab = m_optionsWidget->lastTab();
   }
   return std::make_shared<Task>(std::static_pointer_cast<Filter>(shared_from_this()), m_settings,
-                                std::move(thumbnailCache), pageId, outFileNameGen, lastTab, batch, debug);
+                                std::move(thumbnailCache), pageId, outFileNameGen, sequence, lastTab, batch, debug);
 }
 
-std::shared_ptr<CacheDrivenTask> Filter::createCacheDrivenTask(const OutputFileNameGenerator& outFileNameGen) {
-  return std::make_shared<CacheDrivenTask>(m_settings, outFileNameGen);
+std::shared_ptr<CacheDrivenTask> Filter::createCacheDrivenTask(const OutputFileNameGenerator& outFileNameGen, const PageSequence& sequence) {
+  return std::make_shared<CacheDrivenTask>(m_settings, outFileNameGen, sequence);
 }
 
 void Filter::loadDefaultSettings(const PageInfo& pageInfo) {

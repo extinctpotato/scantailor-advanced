@@ -54,9 +54,9 @@ void StatusBarPanel::updatePage(int pageNumber, size_t pageCount, const PageId& 
   ui.pageInfoLabel->setVisible(true);
 }
 
-void StatusBarPanel::updateFileName(const PageId& pageId) {
+void StatusBarPanel::updateFileName(const PageId& pageId, const PageSequence& sequence) {
   const OutputFileNameGenerator outFileNameGen;
-  const QString outFileName = outFileNameGen.fileNameFor(pageId);
+  const QString outFileName = outFileNameGen.fileNameFor(pageId, sequence);
   ui.fileNameLine->setVisible(true);
   ui.fileNameLabel->setText(outFileName);
   ui.fileNameLabel->setVisible(true);

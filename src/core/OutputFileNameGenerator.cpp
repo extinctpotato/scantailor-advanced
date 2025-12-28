@@ -8,7 +8,10 @@
 #include <utility>
 
 #include "AbstractRelinker.h"
+#include "ApplicationSettings.h"
 #include "PageId.h"
+#include "PageSequence.h"
+#include "PageView.h"
 #include "RelinkablePath.h"
 
 OutputFileNameGenerator::OutputFileNameGenerator()
@@ -26,28 +29,43 @@ void OutputFileNameGenerator::performRelinking(const AbstractRelinker& relinker)
   m_outDir = relinker.substitutionPathFor(RelinkablePath(m_outDir, RelinkablePath::Dir));
 }
 
-QString OutputFileNameGenerator::fileNameFor(const PageId& page) const {
+QString OutputFileNameGenerator::fileNameFor(const PageId& page, const PageSequence& seq) const {
   const bool ltr = (m_layoutDirection == Qt::LeftToRight);
   const PageId::SubPage subPage = page.subPage();
   const int label = m_disambiguator->getLabel(page.imageId().filePath());
 
-  QString name(QFileInfo(page.imageId().filePath()).completeBaseName());
-  if (label != 0) {
-    name += QString::fromLatin1("(%1)").arg(label);
+  QString name;
+
+  if (ApplicationSettings::getInstance().isRenameSequentiallyEnabled()) {
+    if (int pageNumber = seq.pageNo(page); pageNumber != -1) {
+      std::string seqName = std::to_string(pageNumber + 1);
+      // Pad the string with leading zeros based on the number of pages
+      seqName.insert(seqName.begin(), std::to_string(seq.numPages()).length() - seqName.length(), '0');
+      name = QString::fromLatin1(seqName);
+    }
   }
-  if (page.imageId().isMultiPageFile()) {
-    name += QString::fromLatin1("_page%1").arg(page.imageId().page(), 4, 10, QLatin1Char('0'));
+
+  // User either did not request sequential renaming or it failed (e.g. PageView was IMAGE_VIEW)
+  if (name.isEmpty()) {
+    name = QFileInfo(page.imageId().filePath()).completeBaseName();
+    if (label != 0) {
+      name += QString::fromLatin1("(%1)").arg(label);
+    }
+    if (page.imageId().isMultiPageFile()) {
+      name += QString::fromLatin1("_page%1").arg(page.imageId().page(), 4, 10, QLatin1Char('0'));
+    }
+    if (subPage != PageId::SINGLE_PAGE) {
+      name += QLatin1Char('_');
+      name += QLatin1Char(ltr == (subPage == PageId::LEFT_PAGE) ? '1' : '2');
+      name += QLatin1Char(subPage == PageId::LEFT_PAGE ? 'L' : 'R');
+    }
   }
-  if (subPage != PageId::SINGLE_PAGE) {
-    name += QLatin1Char('_');
-    name += QLatin1Char(ltr == (subPage == PageId::LEFT_PAGE) ? '1' : '2');
-    name += QLatin1Char(subPage == PageId::LEFT_PAGE ? 'L' : 'R');
-  }
+
   name += QString::fromLatin1(".tif");
   return name;
 }
 
-QString OutputFileNameGenerator::filePathFor(const PageId& page) const {
-  const QString fileName(fileNameFor(page));
+QString OutputFileNameGenerator::filePathFor(const PageId& page, const PageSequence& seq) const {
+  const QString fileName(fileNameFor(page, seq));
   return QDir(m_outDir).absoluteFilePath(fileName);
 }

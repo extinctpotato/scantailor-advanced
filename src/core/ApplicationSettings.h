@@ -104,6 +104,10 @@ class ApplicationSettings {
 
   void setCancelingSelectionQuestionEnabled(bool enabled);
 
+  bool isRenameSequentiallyEnabled();
+
+  void setRenameSequentiallyEnabled(bool enabled);
+
  private:
   static inline QString getKey(const QString& keyName);
 
@@ -128,6 +132,7 @@ class ApplicationSettings {
   static const QString DEFAULT_UNITS;
   static const QString DEFAULT_PROFILE;
   static const bool DEFAULT_SHOW_CANCELING_SELECTION_QUESTION;
+  static const bool DEFAULT_RENAME_SEQUENTIALLY;
 
   static const QString ROOT_KEY;
   static const QString OPENGL_STATE_KEY;
@@ -151,6 +156,7 @@ class ApplicationSettings {
   static const QString UNITS_KEY;
   static const QString CURRENT_PROFILE_KEY;
   static const QString SHOW_CANCELING_SELECTION_QUESTION_KEY;
+  static const QString RENAME_SEQUENTIALLY_KEY;
 
   QSettings m_settings;
 };

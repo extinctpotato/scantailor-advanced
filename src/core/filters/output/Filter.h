@@ -15,6 +15,7 @@
 #include "PageView.h"
 #include "PictureZonePropFactory.h"
 #include "SafeDeletingQObjectPtr.h"
+#include "PageSequence.h"
 
 class PageSelectionAccessor;
 class ThumbnailPixmapCache;
@@ -53,10 +54,11 @@ class Filter : public AbstractFilter {
   std::shared_ptr<Task> createTask(const PageId& pageId,
                                    std::shared_ptr<ThumbnailPixmapCache> thumbnailCache,
                                    const OutputFileNameGenerator& outFileNameGen,
+				   const PageSequence& sequence,
                                    bool batch,
                                    bool debug);
 
-  std::shared_ptr<CacheDrivenTask> createCacheDrivenTask(const OutputFileNameGenerator& outFileNameGen);
+  std::shared_ptr<CacheDrivenTask> createCacheDrivenTask(const OutputFileNameGenerator& outFileNameGen, const PageSequence& sequence);
 
   OptionsWidget* optionsWidget();
 

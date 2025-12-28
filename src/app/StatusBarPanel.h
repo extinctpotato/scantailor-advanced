@@ -16,6 +16,7 @@
 #include "ui_StatusBarPanel.h"
 
 class PageId;
+class PageSequence;
 
 class StatusBarPanel : public QWidget, public UnitsListener, public ImageViewInfoListener, public ZoneModeListener {
   Q_OBJECT
@@ -35,7 +36,7 @@ class StatusBarPanel : public QWidget, public UnitsListener, public ImageViewInf
 
   void updatePage(int pageNumber, size_t pageCount, const PageId& pageId);
 
-  void updateFileName(const PageId& pageId);
+  void updateFileName(const PageId& pageId, const PageSequence& sequence);
 
   void clearFileName();
 

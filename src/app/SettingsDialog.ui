@@ -252,6 +252,13 @@
             <item row="1" column="1">
              <widget class="QComboBox" name="tiffCompressionColorBox"/>
             </item>
+            <item row="2" column="0">
+             <widget class="QCheckBox" name="renameSequentiallyCB">
+              <property name="text">
+               <string>Rename the files according to the page sequence</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item>

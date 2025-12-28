@@ -82,6 +82,8 @@ SettingsDialog::SettingsDialog(QWidget* parent) : QDialog(parent) {
   ui.singleColumnThumbnailsCB->setChecked(settings.isSingleColumnThumbnailDisplayEnabled());
   ui.cancelingSelectionQuestionCB->setChecked(settings.isCancelingSelectionQuestionEnabled());
 
+  ui.renameSequentiallyCB->setChecked(settings.isRenameSequentiallyEnabled());
+
   connect(ui.buttonBox, SIGNAL(accepted()), SLOT(commitChanges()));
 }
 
@@ -121,6 +123,11 @@ void SettingsDialog::commitChanges() {
 
   settings.setSingleColumnThumbnailDisplayEnabled(ui.singleColumnThumbnailsCB->isChecked());
   settings.setCancelingSelectionQuestionEnabled(ui.cancelingSelectionQuestionCB->isChecked());
+
+  if (bool renameSeq = ui.renameSequentiallyCB->isChecked(); renameSeq != settings.isRenameSequentiallyEnabled()) {
+    settings.setRenameSequentiallyEnabled(renameSeq);
+    emit fileNamingChanged();
+  }
 
   emit settingsChanged();
 }

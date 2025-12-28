@@ -22,8 +22,8 @@
 #include "core/ThumbnailCollector.h"
 
 namespace output {
-CacheDrivenTask::CacheDrivenTask(std::shared_ptr<Settings> settings, const OutputFileNameGenerator& outFileNameGen)
-    : m_settings(std::move(settings)), m_outFileNameGen(outFileNameGen) {}
+CacheDrivenTask::CacheDrivenTask(std::shared_ptr<Settings> settings, const OutputFileNameGenerator& outFileNameGen, const PageSequence& sequence)
+    : m_settings(std::move(settings)), m_outFileNameGen(outFileNameGen), m_pageSequence(sequence) {}
 
 CacheDrivenTask::~CacheDrivenTask() = default;
 
@@ -33,7 +33,7 @@ void CacheDrivenTask::process(const PageInfo& pageInfo,
                               const QPolygonF& contentRectPhys) {
   if (auto* thumbCol = dynamic_cast<ThumbnailCollector*>(collector)) {
     const QFileInfo sourceFileInfo(pageInfo.id().imageId().filePath());
-    const QString outFilePath(m_outFileNameGen.filePathFor(pageInfo.id()));
+    const QString outFilePath(m_outFileNameGen.filePathFor(pageInfo.id(), m_pageSequence));
     const QFileInfo outFileInfo(outFilePath);
     const QString foregroundDir(Utils::foregroundDir(m_outFileNameGen.outDir()));
     const QString backgroundDir(Utils::backgroundDir(m_outFileNameGen.outDir()));

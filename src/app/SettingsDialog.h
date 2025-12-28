@@ -17,6 +17,7 @@ class SettingsDialog : public QDialog {
 
  signals:
   void settingsChanged();
+  void fileNamingChanged();
 
  private slots:
   void commitChanges();
